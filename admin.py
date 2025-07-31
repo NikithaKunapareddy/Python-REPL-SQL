@@ -76,7 +76,11 @@ def add_discount():
     conn = sqlite3.connect('travel.db')
     c = conn.cursor()
     name = input('Discount name: ')
-    percentage = float(input('Discount percentage: '))
+    percentage = float(input('Discount percentage (0-50): '))
+    if percentage < 0 or percentage > 50:
+        print('Error: Discount percentage must be between 0 and 50.')
+        conn.close()
+        return
     user_type = input('User type (or leave blank for all): ') or None
     min_points = int(input('Minimum loyalty points (0 if not required): '))
     c.execute('INSERT INTO discounts (name, percentage, user_type, min_points) VALUES (?, ?, ?, ?)',
@@ -84,6 +88,20 @@ def add_discount():
     conn.commit()
     conn.close()
     print('Discount added successfully!')
+
+def reset_user_password():
+    conn = sqlite3.connect('travel.db')
+    c = conn.cursor()
+    username = input('Enter username to reset password: ')
+    new_password = input('Enter new password: ')
+    hashed = hashlib.sha256(new_password.encode()).hexdigest()
+    c.execute('UPDATE users SET password=? WHERE username=?', (hashed, username))
+    if c.rowcount == 0:
+        print(f"No user found with username '{username}'!")
+    else:
+        conn.commit()
+        print(f"Password for user '{username}' has been reset.")
+    conn.close()
 
 def main():
     while True:
@@ -93,6 +111,7 @@ def main():
         print('3. Add Route')
         print('4. Add Discount')
         print('5. Exit')
+        print('6. Reset User Password')
         choice = input('Choose an option: ')
         if choice == '1':
             setup_database()
@@ -105,6 +124,8 @@ def main():
         elif choice == '5':
             print('Goodbye!')
             break
+        elif choice == '6':
+            reset_user_password()
         else:
             print('Invalid choice!')
 

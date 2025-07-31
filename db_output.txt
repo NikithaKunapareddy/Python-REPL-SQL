@@ -1,0 +1,12 @@
+Users:
+(2, 'NIKITHA')
+(1, 'Nikitha')
+(3, 'nikitha')
+(4, 'teja')
+
+Routes:
+(1, 'vijayawada', 'paris', '2025-08-01T09:30:00', 12000.5, 2, 'flight')
+(2, 'vijayawada', 'paris', '2025-08-19T09:00:00', 55000.0, 2, 'flight')
+(3, 'vijayawada', 'hyderabad', '2025-08-19T09:00:00', 50000.0, 2, 'flight')
+(4, 'delhi', 'paris', '2025-08-19T09:00:00', 550000.0, 2, 'flight')
+(5, 'bengaluru', 'usa', '2025-08-05T10:30:00', 55000.0, 5, 'flight')
