@@ -16,12 +16,30 @@ def fetch_all_bookings_for_user(username):
         conn.close()
         return 0.0
     total = 0.0
+    route_totals = {}
     for bid in booking_ids:
         print("\n==============================")
+        # Fetch route_id for this booking
+        c.execute('SELECT route_id FROM bookings WHERE id=?', (bid,))
+        route_row = c.fetchone()
+        if not route_row:
+            continue
+        route_id = route_row[0]
+        # Fetch route details
+        c.execute('SELECT origin, destination FROM routes WHERE id=?', (route_id,))
+        route_info = c.fetchone()
+        if not route_info:
+            continue
+        route_key = f"{route_info[0]} -> {route_info[1]}"
         final_price = fetch_and_explain_booking(bid)
         if final_price is not None:
             total += final_price
+            if route_key not in route_totals:
+                route_totals[route_key] = 0.0
+            route_totals[route_key] += final_price
     print("\n==============================")
+    for route_key, route_total in route_totals.items():
+        print(f"Total price for route {route_key}: {route_total}")
     print(f"Total price for all bookings for user '{username}': {total}")
     conn.close()
     return total
@@ -120,28 +138,7 @@ if __name__ == "__main__":
     mode = input("Enter 1 or 2: ").strip()
     if mode == '2':
         username = input("Enter username: ").strip()
-        conn = sqlite3.connect('travel.db')
-        c = conn.cursor()
-        c.execute('SELECT id FROM users WHERE username=?', (username,))
-        user_row = c.fetchone()
-        if not user_row:
-            print(f"No user found with username '{username}'")
-        else:
-            user_id = user_row[0]
-            c.execute('SELECT id FROM bookings WHERE user_id=?', (user_id,))
-            booking_ids = [row[0] for row in c.fetchall()]
-            if not booking_ids:
-                print(f"No bookings found for user '{username}'")
-            else:
-                total = 0.0
-                for bid in booking_ids:
-                    print("\n==============================")
-                    final_price = fetch_and_explain_booking(bid)
-                    if final_price is not None:
-                        total += final_price
-                print("\n==============================")
-                print(f"Total price for all bookings for user '{username}': {total}")
-        conn.close()
+        fetch_all_bookings_for_user(username)
     else:
         booking_ids_input = input("Enter booking ID(s) to explain calculation (comma-separated for group): ").strip()
         booking_ids = []
