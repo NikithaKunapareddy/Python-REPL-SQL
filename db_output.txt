@@ -1,8 +1,7 @@
 Users:
-(2, 'NIKITHA')
+(5, 'John')
 (1, 'Nikitha')
 (3, 'nikitha')
-(4, 'teja')
 
 Routes:
 (1, 'vijayawada', 'paris', '2025-08-01T09:30:00', 12000.5, 2, 'flight')
@@ -10,3 +9,5 @@ Routes:
 (3, 'vijayawada', 'hyderabad', '2025-08-19T09:00:00', 50000.0, 2, 'flight')
 (4, 'delhi', 'paris', '2025-08-19T09:00:00', 550000.0, 2, 'flight')
 (5, 'bengaluru', 'usa', '2025-08-05T10:30:00', 55000.0, 5, 'flight')
+(6, 'vij', 'hyd', ' 2025-08-05T10:30:00', 1000.0, 10, 'bus')
+(7, 'chennai', 'london', '2025-08-01T14:15:00', 65000.0, 3, 'flight')
