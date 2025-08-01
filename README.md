@@ -35,13 +35,13 @@ The system follows this execution flow:
 ```
 User says: "total price for user nikitha"
         ↓
-agent_repl.py: Translates to → fetch_all_bookings_for_user("nikitha")
+agent_repl.py: Translates to → Complex SQL + fetch_and_explain_booking() calls
         ↓
-REPL executes: fetch_and_calculate.py's function
+REPL executes: Generated Python code with database queries
         ↓
-fetch_and_calculate.py: Does actual database work & calculations
+fetch_and_calculate.py: Called multiple times for each booking calculation
         ↓
-Returns: Real calculated total price
+Returns: Route-wise summary + total price
 ```
 
 ### 🎯 Interactive Architecture Flowchart
@@ -233,9 +233,29 @@ CREATE TABLE bookings (
 
 > 🚀 **Get Started**: Ready to see the magic in action? Try these examples!
 
-### 🎮 Starting the REPL Agent
+### 🎮 Starting the System
+
+> ⚠️ **Setup Order**: Always run `python admin.py` first to populate database, then `python agent_repl.py` for queries and bookings!
+
+#### Step 1: Database Setup
+```bash
+python admin.py
+# This creates users, routes, and sample bookings
+```
+
+#### Step 2: Create New Bookings (Optional)
+```bash
+python booking.py
+# Interactive booking system to create new reservations
+# This adds more bookings to the database
+```
+
+#### Step 3: REPL Agent (Main Interface)
 ```bash
 python agent_repl.py
+# Now you can:
+# - Query existing bookings: "show booking 1", "total for nikitha"
+# - Calculate prices for any booking ID that exists in the database
 ```
 
 ### 💬 Natural Language Commands
@@ -425,10 +445,10 @@ cd Python-REPL-SQL
 # Install dependencies (optional external DB drivers)
 pip install -r requirements.txt
 
-# Initialize database (if needed)
+# Step 1: Initialize database and add users, routes, bookings
 python admin.py
 
-# Start the REPL agent (main interface)
+# Step 2: Start the REPL agent (main interface)
 python agent_repl.py
 ```
 
