@@ -496,4 +496,4 @@ This project demonstrates the integration of:
 
 Feel free to extend the command patterns, add new pricing rules, or integrate with external APIs.
 
-> **🎉 Happy Coding: Thank you for exploring our AI-powered travel system! May your journey with this code be as amazing as the destinations it helps book! ✈️🌟**
+ **🎉 Happy Coding: Thank you for exploring our AI-powered travel system! May your journey with this code be as amazing as the destinations it helps book! ✈️🌟**
