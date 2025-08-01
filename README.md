@@ -263,11 +263,14 @@ python agent_repl.py
 💬 You: show booking 9
 🤖 Agent: [Displays detailed booking calculation]
 
+💬 You: show all bookings under user nikitha
+🤖 Agent: [Shows detailed breakdown for user 'nikitha']
+
 💬 You: total price for user nikitha
 🤖 Agent: [Shows route-wise summary and total]
 
 💬 You: who owns booking 5
-🤖 Agent: [Shows booking ownership details]
+🤖 Agent: [Shows "Booking 5 → User: [username]"]
 
 💬 You: calculate bookings 1,2,3
 🤖 Agent: [Shows individual and combined totals]
@@ -461,7 +464,7 @@ The agent recognizes these natural language patterns:
 | Pattern | Example | Function Called |
 |---------|---------|----------------|
 | Booking by ID | "show booking 5" | `fetch_and_explain_booking(5)` |
-| User totals | "total for nikitha" | `fetch_all_bookings_for_user("nikitha")` |
+| User totals | "total for nikitha", "show all bookings under user nikitha" | `fetch_all_bookings_for_user("nikitha")` |
 | Multiple bookings | "bookings 1,2,3" | Multiple `fetch_and_explain_booking()` calls |
 | Ownership | "who owns booking 7" | Booking ownership query |
 | All bookings | "show all bookings" | Complete booking list |
@@ -493,4 +496,4 @@ This project demonstrates the integration of:
 
 Feel free to extend the command patterns, add new pricing rules, or integrate with external APIs.
 
-> 🎉 **Happy Coding**: Thank you for exploring our AI-powered travel system! May your journey with this code be as amazing as the destinations it helps book! ✈️🌟
+> **🎉 Happy Coding: Thank you for exploring our AI-powered travel system! May your journey with this code be as amazing as the destinations it helps book! ✈️🌟**

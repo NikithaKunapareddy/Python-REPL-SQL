@@ -68,21 +68,16 @@ class TravelBookingAgent:
                 'fetch_and_explain_booking': fetch_and_explain_booking,
             }
             
-            print(f"🤖 Agent executing in LOCAL REPL: {code_to_execute}")
-            print("=" * 60)
-            
             # Execute the code in REPL-style using exec for multi-line code
             exec(code_to_execute, {"__builtins__": __builtins__}, local_namespace)
             
             # Get the result from the local namespace
             result = local_namespace.get('result', None)
             
-            print("=" * 60)
-            print(f"✅ LOCAL REPL execution completed. Result: {result}")
             return result
             
         except Exception as e:
-            print(f"❌ Error in LOCAL REPL execution: {e}")
+            print(f"❌ Error: {e}")
             return None
     
     def execute_system_repl(self, code_to_execute):
@@ -463,7 +458,9 @@ result
                 
                 # Process the command (always use local REPL for simplicity)
                 result = self.process_command(user_input, 'local')
-                print(f"\n🤖 Result: {result}")
+                # Only show result if it's a simple response (not for complex outputs)
+                if result and isinstance(result, (str, int, float)) and len(str(result)) < 100:
+                    print(f"\n🤖 Result: {result}")
                 
             except KeyboardInterrupt:
                 print("\n👋 Goodbye!")
