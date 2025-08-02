@@ -33,15 +33,17 @@ Python-REPL-SQL/
 The system follows this execution flow:
 
 ```
-User says: "total price for user nikitha"
+User says: "total price for user nikitha" ← 📖 READ
         ↓
-agent_repl.py: Translates to → Complex SQL + fetch_and_explain_booking() calls
+agent_repl.py: Translates to → Complex SQL + fetch_and_explain_booking() calls ← ⚙️ EVAL
         ↓
-REPL executes: Generated Python code with database queries
+REPL executes: Generated Python code with database queries ← ⚡ EVAL
         ↓
-fetch_and_calculate.py: Called multiple times for each booking calculation
+fetch_and_calculate.py: Called multiple times for each booking calculation ← 📊 EVAL
         ↓
-Returns: Route-wise summary + total price
+Returns: Route-wise summary + total price ← 📄 PRINT
+        ↓
+Ready for next natural language command ← 🔁 LOOP
 ```
 
 ### 🎯 Interactive Architecture Flowchart
