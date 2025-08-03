@@ -33,6 +33,8 @@ class TravelBookingAgent:
         self.commands = {
             'booking_by_id': r'(?:show|explain|calculate|get)\s+(?:booking|price)\s+(?:for\s+)?(?:id\s+)?(\d+)',
             'booking_by_user': r'(?:show|get|find)\s+(?:me\s+)?(?:all\s+)?bookings?\s+(?:for|under|of)\s+(?:user\s+)?["\']?(\w+)["\']?',
+            'provide_all_bookings': r'(?:provide|show)\s+(?:all\s+)?(?:my\s+)?(?:bookings?|all\s+bookings?)',
+            'my_bookings': r'(?:show|get|find)\s+(?:all\s+)?(?:my)\s+bookings?',
             'user_total': r'(?:total|sum)\s+(?:price|cost)\s+(?:for|of|under)\s+(?:user\s+)?["\']?(\w+)["\']?',
             'multiple_bookings': r'(?:show|explain)\s+bookings?\s+(\d+(?:\s*,\s*\d+)*)',
             'booking_owner': r'(?:who|which\s+user|owner)\s+(?:owns|has|booked)\s+booking\s+(\d+)',
@@ -387,6 +389,106 @@ print("="*60)
 print(f"Total bookings in system: {{len(all_bookings)}}")
 conn.close()
 result = f"Found {{len(all_bookings)}} total bookings"
+result
+'''
+
+        elif intent == 'provide_all_bookings':
+            # Show ALL bookings in the system for ALL users with calculations
+            code_to_execute = '''
+import sqlite3
+conn = sqlite3.connect("travel.db")
+c = conn.cursor()
+
+# Get all users
+c.execute("SELECT DISTINCT username FROM users ORDER BY username")
+all_users = [row[0] for row in c.fetchall()]
+
+if not all_users:
+    print("No users found in the system")
+    result = 0.0
+else:
+    print("📋 ALL BOOKINGS IN SYSTEM - COMPLETE ANALYSIS:")
+    print("="*70)
+    
+    total_system_price = 0.0
+    total_bookings = 0
+    users_with_bookings = 0
+    
+    for username in all_users:
+        c.execute("SELECT id FROM users WHERE username=?", (username,))
+        user_row = c.fetchone()
+        if not user_row:
+            continue
+            
+        user_id = user_row[0]
+        c.execute("SELECT id FROM bookings WHERE user_id=?", (user_id,))
+        user_bookings = [row[0] for row in c.fetchall()]
+        
+        if user_bookings:
+            users_with_bookings += 1
+            print(f"\\n👤 USER: {username.upper()} ({len(user_bookings)} bookings)")
+            print("-" * 50)
+            
+            user_total = 0.0
+            for bid in user_bookings:
+                price = fetch_and_explain_booking(bid)
+                if price:
+                    user_total += price
+                    total_system_price += price
+                    total_bookings += 1
+                print("-" * 30)
+            
+            print(f"\\n💰 TOTAL FOR {username.upper()}: ${user_total:.2f}")
+            print("=" * 50)
+    
+    print(f"\\n🎯 GRAND TOTAL - ALL USERS: ${total_system_price:.2f}")
+    print(f"📊 TOTAL BOOKINGS: {total_bookings}")
+    print(f"👥 USERS WITH BOOKINGS: {users_with_bookings}")
+    
+    result = total_system_price
+
+conn.close()
+result
+'''
+
+        elif intent == 'my_bookings':
+            # For CLI usage, ask for username. For web usage, this will be handled by the web interface
+            # The web interface should pass the current username to this method
+            # We'll provide a helpful message for CLI users
+            code_to_execute = '''
+import sqlite3
+# Check if we can determine a current user (this will work when called from web interface)
+current_user = None
+
+# For CLI usage, we need the user to specify
+if not current_user:
+    print("📋 To view your bookings, you have two options:")
+    print("1. Use the web interface (login automatically provides your username)")
+    print("2. In CLI, use: 'show bookings for [your_username]'")
+    print("")
+    print("Examples:")
+    print("• 'show bookings for nikitha'")
+    print("• 'show bookings for john'")
+    print("• 'all bookings for [username]'")
+    result = "Please specify username for booking queries"
+else:
+    # This would execute if called with user context (from web interface)
+    result = fetch_all_bookings_for_user(current_user)
+result
+'''
+            
+        elif intent == 'my_bookings':
+            # For CLI usage, ask for username. For web usage, this will be handled by the web interface
+            code_to_execute = '''
+print("📋 To view your bookings, you have two options:")
+print("1. Use the web interface (login automatically provides your username)")
+print("2. In CLI, use: 'show bookings for [your_username]'")
+print("")
+print("Examples:")
+print("• 'show bookings for nikitha'")
+print("• 'show bookings for john'")
+print("• 'all bookings for [username]'")
+result = "Please specify username for booking queries"
 result
 '''
             

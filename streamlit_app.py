@@ -423,7 +423,39 @@ def process_booking_chat(message):
         else:
             return f"❌ Invalid route number. We have {len(routes)} routes available. Please choose between 1 and {len(routes)}.\n\n💡 Type '**show routes**' to see all available routes again."
     # PRIORITY 4: Handle booking queries (show bookings) - MUST be before other logic
-    if any(word in message for word in ["show bookings", "my bookings", "booking history", "bookings for", "all bookings", "bookings under", "bookings of", "booking queries", "show all booking", "all booking"]):
+    if any(word in message for word in ["show bookings", "my bookings", "booking history", "bookings for", "all bookings", "bookings under", "bookings of", "booking queries", "show all booking", "all booking", "provide all my bookings", "all my bookings", "provide all"]):
+        
+        # Check if this is a request for ALL system bookings (no specific user)
+        if any(phrase in message for phrase in ["provide all", "provide all my bookings", "all my bookings"]) and "for" not in message and "under" not in message and "of" not in message:
+            # This is a request for ALL system bookings with calculations
+            try:
+                # Import the agent if not already available
+                if 'agent' not in st.session_state or st.session_state.agent is None:
+                    from agent_repl import TravelBookingAgent
+                    st.session_state.agent = TravelBookingAgent()
+                
+                # Use the new provide_all_bookings intent directly
+                with capture_stdout() as captured:
+                    result = st.session_state.agent.process_command('provide all bookings', 'local')
+                    agent_output = captured.getvalue()
+                
+                if agent_output.strip():
+                    # Format the output nicely for Streamlit
+                    response = "� **ALL BOOKINGS IN SYSTEM - Complete Analysis:**\n\n"
+                    response += "```\n"
+                    response += agent_output.strip()
+                    response += "\n```\n\n"
+                    response += "� **Want specific user data?** Try:\n"
+                    response += "• 'show bookings for [username]' - Individual user analysis\n"
+                    response += "• 'total price for [username]' - Quick spending summary"
+                    return response
+                else:
+                    return "📋 **No bookings found in the system.**\n\nThe system is ready for new bookings! Users can log in and start booking trips."
+                
+            except Exception as e:
+                return f"❌ Error retrieving all system bookings: {str(e)}\n\nPlease try again or contact support."
+        
+        # Handle user-specific booking queries
         # Enhanced username extraction to catch any username pattern
         import re
         # More flexible regex patterns to catch variations like "booking queries under nikitha"
@@ -431,15 +463,21 @@ def process_booking_chat(message):
         if username_match:
             requested_user = username_match.group(1)
         else:
-            # Also check for pattern like "nikitha bookings" or "john bookings"  
-            username_match = re.search(r'([a-zA-Z0-9_]+)\s+(?:bookings?|booking queries?)', message)
-            if username_match:
-                requested_user = username_match.group(1)
-            else:
-                # If no specific username is mentioned and user is not logged in, ask for username
+            # Check for "my bookings" when user is logged in
+            if any(phrase in message for phrase in ["my bookings", "show my bookings"]) and "provide all" not in message:
                 if not st.session_state.chat_user_authenticated:
-                    return "🔐 Please specify a username or log in first to view bookings.\n\n💡 **Examples:**\n• 'show bookings for nikitha'\n• 'all bookings under john'\n• 'show all booking queries under nikitha'\n• Or type 'login' to access your bookings"
+                    return "🔐 Please log in first to view your bookings.\n\nType 'login' to get started!"
                 requested_user = st.session_state.chat_current_user
+            else:
+                # Also check for pattern like "nikitha bookings" or "john bookings"  
+                username_match = re.search(r'([a-zA-Z0-9_]+)\s+(?:bookings?|booking queries?)', message)
+                if username_match:
+                    requested_user = username_match.group(1)
+                else:
+                    # If no specific username is mentioned and user is not logged in, ask for username
+                    if not st.session_state.chat_user_authenticated:
+                        return "🔐 Please specify a username or log in first to view bookings.\n\n💡 **Examples:**\n• 'show bookings for nikitha'\n• 'all bookings under john'\n• 'show all booking queries under nikitha'\n• Or type 'login' to access your bookings"
+                    requested_user = st.session_state.chat_current_user
         
         # Execute REPL command to get detailed booking information
         try:
@@ -580,6 +618,29 @@ def process_booking_chat(message):
                 
         except Exception as e:
             return f"❌ Error retrieving bookings: {str(e)}\n\nPlease try again or contact support."
+    
+    # Handle requests for ALL bookings in the system (admin view)
+    if any(phrase in message for phrase in ["all bookings", "show all bookings", "system bookings", "every booking"]):
+        if "for" not in message and "under" not in message and "of" not in message:
+            # This is a request for ALL system bookings, not user-specific
+            try:
+                # Import the agent if not already available
+                if 'agent' not in st.session_state or st.session_state.agent is None:
+                    from agent_repl import TravelBookingAgent
+                    st.session_state.agent = TravelBookingAgent()
+                
+                # Use the new provide_all_bookings intent for detailed analysis
+                with capture_stdout() as captured:
+                    result = st.session_state.agent.process_command('provide all bookings', 'local')
+                    agent_output = captured.getvalue()
+                
+                if agent_output.strip():
+                    return f"📋 **All Bookings in System - Complete Analysis:**\n\n```\n{agent_output.strip()}\n```\n\n💡 **Want user-specific bookings?** Try:\n• 'show bookings for [username]' - See specific user's bookings\n• 'total price for [username]' - See spending summary"
+                else:
+                    return "📋 No bookings found in the system."
+                    
+            except Exception as e:
+                return f"❌ Error retrieving all system bookings: {str(e)}\n\nPlease try again or contact support."
     
     
     # Handle login requests (more conversational and guided)
