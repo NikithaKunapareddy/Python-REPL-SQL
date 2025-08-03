@@ -1,7 +1,11 @@
 Users:
+(7, 'Anupam')
+(6, 'Anupam Sir')
 (5, 'John')
 (1, 'Nikitha')
+(8, 'anupam')
 (3, 'nikitha')
+(9, 'teja')
 
 Routes:
 (1, 'vijayawada', 'paris', '2025-08-01T09:30:00', 12000.5, 2, 'flight')
@@ -11,3 +15,7 @@ Routes:
 (5, 'bengaluru', 'usa', '2025-08-05T10:30:00', 55000.0, 5, 'flight')
 (6, 'vij', 'hyd', ' 2025-08-05T10:30:00', 1000.0, 10, 'bus')
 (7, 'chennai', 'london', '2025-08-01T14:15:00', 65000.0, 3, 'flight')
+(8, 'delhi', 'london', '2025-08-02T18:15:00', 35000.0, 50, 'flight')
+(9, 'Goa', 'Usa', '2025-01-15 10:00:00', 54000.0, 20, 'flight')
+(10, 'Raipur', 'Singapore', '2025-01-15 10:00:00', 50000.0, 100, 'flight')
+(11, 'Hyd', 'Bengaluru', '2025-01-15 10:00:00', 15000.0, 50, 'bus')

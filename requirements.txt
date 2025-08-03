@@ -1,4 +1,12 @@
 # requirements.txt
+streamlit
+sqlite3
+hashlib
+datetime
+re
+subprocess
+sys
+os
 # For SQLite, no extra package needed. For others, uncomment as needed:
 # psycopg2
 # mysql-connector-python
