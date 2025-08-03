@@ -2,16 +2,9 @@
 
 ## 📖 Overview
 
-A comprehensive Python-based travel booking system that combines a modern Streamlit web interface with an int### 🏢 Architecture Layers
+A comprehensive Python-based travel booking system that combines a modern Streamlit web interface with an intelligent agent capable of executing functions through REPL (Read-Eval-Print Loop) based on natural language input. This system demonstrates the integration of Natural Language Inference (NLI) with database operations, dynamic pricing algorithms, and a complete booking workflow.
 
-The system is organized into 6 distinct layers:
 
-- **🔵 User Interface Layer**: Handles user input through web browser or command line
-- **🟣 Web Application Layer**: Streamlit interface with chat, admin panel, and dashboard
-- **🟢 Processing Layer**: NLI parsing, REPL execution, and command processing  
-- **🟡 Business Logic Layer**: Core functions, pricing algorithms, validation, and booking workflow
-- **🔴 Data Layer**: Database operations and data storage across multiple tables
-- **🟤 Support Systems**: Administrative tools, utilities, and launchersI agent capable of executing functions through REPL (Read-Eval-Print Loop) based on natural language input. This system demonstrates the integration of Natural Language Inference (NLI) with database operations, dynamic pricing algorithms, and a complete booking workflow.
 
 ## 📁 Project Structure
 
@@ -184,10 +177,10 @@ The system is organized into 6 distinct layers:
 
 - **🔵 User Interface Layer**: Handles user input through web browser or command line
 - **🟣 Web Application Layer**: Streamlit interface with chat, admin panel, and dashboard
-- **� Processing Layer**: NLI parsing, REPL execution, and command processing  
-- **� Business Logic Layer**: Core functions, pricing algorithms, validation, and booking workflow
+- **🟢 Processing Layer**: NLI parsing, REPL execution, and command processing  
+- **🟡 Business Logic Layer**: Core functions, pricing algorithms, validation, and booking workflow
 - **🔴 Data Layer**: Database operations and data storage across multiple tables
-- **� Support Systems**: Administrative tools, utilities, and launchers
+- **🟤 Support Systems**: Administrative tools, utilities, and launchers
 
 ## 🧩 Key Components
 
