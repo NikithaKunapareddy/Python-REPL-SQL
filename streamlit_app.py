@@ -42,8 +42,156 @@ st.markdown("""
         color: #333333;
         font-family: 'Segoe UI', sans-serif;
     }
+    
+    /* EMERGENCY FIX - Override EVERYTHING */
+    *, *::before, *::after {
+        color: #000000 !important;
+        background-color: transparent !important;
+    }
+    
+    /* Make sure input is visible */
+    .stChatInput input {
+        color: #1565c0 !important;
+        background-color: #ffffff !important;
+        border: 2px solid #2196f3 !important;
+        border-radius: 8px !important;
+        padding: 12px !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+    }
+    
+    .stChatInput input:focus {
+        border-color: #1976d2 !important;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3) !important;
+        outline: none !important;
+    }
+    
+    .stChatInput input::placeholder {
+        color: #64b5f6 !important;
+        font-style: italic !important;
+    }
+    
+    /* Make the chat input container more visible and FIXED at bottom - Aligned to main content */
+    .stChatInput {
+        background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%) !important;
+        padding: 15px !important;
+        border-radius: 12px !important;
+        border: 3px solid #2196f3 !important;
+        margin: 0 !important;
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.2) !important;
+        position: fixed !important;
+        bottom: 5px !important;
+        left: 340px !important; /* Start after sidebar */
+        right: 40px !important; /* Small margin from right edge */
+        z-index: 9999 !important;
+        width: auto !important;
+    }
+    
+    /* Adjust for when sidebar is collapsed */
+    @media (max-width: 768px) {
+        .stChatInput {
+            left: 20px !important;
+            right: 20px !important;
+        }
+    }
+    
+    /* Add padding to main content so it doesn't get hidden by fixed input */
+    .main .block-container {
+        padding-bottom: 150px !important; /* More space for fixed input */
+    }
+    
+    /* Ensure sidebar doesn't get covered */
+    .css-1d391kg {
+        z-index: 1000 !important;
+    }
+    
+    /* Fix divider lines and borders */
+    hr, .stDivider, [data-testid="stHorizontalBlock"] {
+        border: 1px solid #333333 !important;
+        background-color: #333333 !important;
+        height: 2px !important;
+        margin: 10px 0 !important;
+    }
+    
+    /* Make sure all lines are visible */
+    .css-1kyxreq, .css-1v0mbdj {
+        border-color: #333333 !important;
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg, [data-testid="stSidebar"] {
+        border-right: 2px solid #333333 !important;
+        background-color: #f8f9fa !important;
+    }
+    
+    /* Style the sidebar buttons to look better */
+    .stButton > button {
+        background-color: #2196f3 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 8px 16px !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+        width: 100% !important;
+        margin: 4px 0 !important;
+    }
+    
+    .stButton > button:hover {
+        background-color: #1976d2 !important;
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3) !important;
+        transform: translateY(-1px) !important;
+    }
+    
+    /* Style the login status info */
+    .stInfo {
+        background-color: #e3f2fd !important;
+        border-left: 4px solid #2196f3 !important;
+        color: #1565c0 !important;
+    }
+    
+    .stSuccess {
+        background-color: #f1f8e9 !important;
+        border-left: 4px solid #4caf50 !important;
+        color: #2e7d32 !important;
+    }
+    
+    /* Main title styling */
+    h1 {
+        color: #1565c0 !important;
+        text-align: center !important;
+        font-size: 2.5rem !important;
+        margin-bottom: 2rem !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* Chat subheader */
+    h2 {
+        color: #2e7d32 !important;
+        border-bottom: 2px solid #4caf50 !important;
+        padding-bottom: 8px !important;
+    }
+    
+    /* Sidebar headers */
+    h3 {
+        color: #1976d2 !important;
+        font-size: 1.2rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Chat message containers */
+    [data-testid="stChatMessage"],
+    .stChatMessage {
+        background-color: #f0f0f0 !important;
+        color: #000000 !important;
+        border: 1px solid #000000 !important;
+        padding: 10px !important;
+        margin: 5px 0 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
+
+# Using custom HTML for chat messages instead of st.chat_message to ensure visibility
 
 @contextmanager
 def capture_stdout():
@@ -266,26 +414,24 @@ def chat_booking_interface():
     # Display chat messages
     for message in st.session_state.chat_messages:
         if message["role"] == "user":
-            with st.chat_message("user"):
-                st.write(message["content"])
+            # Use markdown with explicit styling for user messages
+            st.markdown(f"""
+            <div style="background-color: #e3f2fd; padding: 10px; border-radius: 5px; margin: 5px 0; border-left: 4px solid #2196f3;">
+                <strong style="color: #000000;">You:</strong><br>
+                <span style="color: #000000; font-size: 14px;">{message["content"]}</span>
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            with st.chat_message("assistant"):
-                st.write(message["content"])
+            # Use markdown with explicit styling for assistant messages
+            st.markdown(f"""
+            <div style="background-color: #f1f8e9; padding: 10px; border-radius: 5px; margin: 5px 0; border-left: 4px solid #4caf50;">
+                <strong style="color: #000000;">Assistant:</strong><br>
+                <span style="color: #000000; font-size: 14px;">{message["content"]}</span>
+            </div>
+            """, unsafe_allow_html=True)
     
-    # Chat input
-    user_input = st.chat_input("Type your message here...")
-    
-    if user_input:
-        # Add user message
-        st.session_state.chat_messages.append({"role": "user", "content": user_input})
-        
-        # Process and get response
-        response = process_booking_chat(user_input)
-        
-        # Add assistant response
-        st.session_state.chat_messages.append({"role": "assistant", "content": response})
-        
-        st.rerun()
+    # Chat input with better visibility - MOVED TO END
+    # (This will be moved after the rerun() calls)
     
     # Sidebar with user info and quick actions
     with st.sidebar:
@@ -323,6 +469,21 @@ def chat_booking_interface():
             st.session_state.chat_messages = []
             st.session_state.booking_context = {}
             st.rerun()
+    
+    # CHAT INPUT AT THE BOTTOM - Now properly fixed
+    user_input = st.chat_input("Type your message here...")
+    
+    if user_input:
+        # Add user message
+        st.session_state.chat_messages.append({"role": "user", "content": user_input})
+        
+        # Process and get response
+        response = process_booking_chat(user_input)
+        
+        # Add assistant response
+        st.session_state.chat_messages.append({"role": "assistant", "content": response})
+        
+        st.rerun()
 
 def process_booking_chat(message):
     """Process chat messages for complete booking flow"""
@@ -684,9 +845,9 @@ def process_booking_chat(message):
     # Handle action choice (existing routes vs new route)
     if st.session_state.booking_context.get('step') == 'choose_action':
         if any(word in message for word in ["1", "existing", "book existing", "existing routes"]):
-            # User wants to book existing routes
-            st.session_state.booking_context = {'step': 'asking_destination'}
-            return "🎯 **Great! Let's book from existing routes!**\n\n✈️ **Where would you like to go?**\nJust tell me your destination city, for example:\n• 'Paris'\n• 'Mumbai'\n• 'Tokyo'\n\nWhat's your dream destination?"
+            # User wants to book existing routes - FIX: Ask for origin first, not destination
+            st.session_state.booking_context = {'step': 'asking_origin'}
+            return "🎯 **Great! Let's book from existing routes!**\n\n🏠 **Where will you be traveling from?**\nPlease tell me your origin city (starting point):\n\nFor example:\n• 'Delhi'\n• 'Mumbai'\n• 'Vijayawada'\n• 'Chennai'\n\nWhat's your starting city?"
         elif any(word in message for word in ["2", "new", "add", "new route"]):
             # User wants to add new route
             st.session_state.booking_context = {'step': 'new_route_origin'}
@@ -819,6 +980,11 @@ def process_booking_chat(message):
     if st.session_state.booking_context.get('step') == 'asking_destination':
         destination = message.strip().title()
         origin = st.session_state.booking_context.get('origin')
+        
+        # Safety check: If origin is missing, redirect to asking_origin
+        if not origin:
+            st.session_state.booking_context = {'step': 'asking_origin'}
+            return "🔄 **Oops! I need to know where you're starting from first.**\n\n🏠 **Where will you be traveling from?**\nPlease tell me your origin city (starting point):\n\nFor example:\n• 'Delhi'\n• 'Mumbai'\n• 'Vijayawada'\n• 'Chennai'\n\nWhat's your starting city?"
         
         # Search for routes between origin and destination
         matching_routes = search_routes(origin, destination)
@@ -954,12 +1120,12 @@ def process_booking_chat(message):
                 response += f"**{i}.** {route[1]} → {route[2]} ({route[5]}) - ${route[4]:.2f}\n"
             response += f"\n💡 Type a route number (1-{len(routes)}) to book!"
             return response
-        elif any(word in message for word in ["change", "different", "try again"]):
-            # Start over with new cities
+        elif any(word in message for word in ["change", "different", "try again", "revise", "badal do", "modify", "edit", "redo"]):
+            # Start over with new cities - Enhanced language support
             st.session_state.booking_context = {'step': 'asking_origin'}
             return "🔄 **Let's try different cities!**\n\n🏠 **Where will you be traveling from?**\nPlease tell me your origin city (starting point):"
         else:
-            return f"🤔 I didn't understand that. Please choose:\n• Type '**yes**' to add {origin} → {destination} route\n• Type '**show all**' to see available routes\n• Type '**change**' to try different cities\n• Type a **route number** to book existing route"
+            return f"🤔 I didn't understand that. Please choose:\n• Type '**yes**' to add {origin} → {destination} route\n• Type '**show all**' to see available routes\n• Type '**change**', '**revise**', or '**badal do**' to try different cities\n• Type a **route number** to book existing route"
     
     # Handle route addition requests
     if any(word in message for word in ["add route", "new route", "create route", "route request"]):
